@@ -58,9 +58,32 @@ function Home() {
       // 加载完成后的回调函数
       function (texture) {
         // 创建一个球体
-        const geometry = new THREE.SphereGeometry(5, 32, 32)
+        const geometry = new THREE.SphereGeometry(5, 40, 40)
         const material = new THREE.MeshBasicMaterial({ map: texture }) // 将贴图应用到材质上
         const earth = new THREE.Mesh(geometry, material)
+
+        const haloMaterial = new THREE.ShaderMaterial({
+          transparent: true,
+          blending: THREE.AdditiveBlending,
+          vertexShader: `    varying vec2 vUv;
+          void main() {
+              vUv = uv;
+              vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
+              gl_Position = projectionMatrix * mvPosition;
+          }`,
+          fragmentShader: `   uniform sampler2D texture1;
+          varying vec2 vUv;
+          void main() {
+              vec4 texColor = texture2D(texture1, vUv);
+              gl_FragColor =  vec4(1.0, 0.0, 0.0, 0.5); // 设置光晕透明度
+          }`,
+          uniforms: {
+            texture1: { value: texture }
+          }
+        })
+        const halo = new THREE.Mesh(geometry.clone(), haloMaterial)
+        halo.scale.multiplyScalar(1.1)
+        scene.add(halo)
 
         scene.add(earth)
 
