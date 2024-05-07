@@ -2,9 +2,17 @@ import React, { useRef, useEffect } from 'react'
 import * as THREE from 'three'
 import GLobe from '@/assets/globe.jpg'
 import { OrbitControls } from 'three/examples/jsm/Addons.js'
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js'
+// 引入OutlinePass通道
+
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass'
+import { OutlinePass } from 'three/addons/postprocessing/OutlinePass.js'
+// SMAA抗锯齿通道
+import { SMAAPass } from 'three/addons/postprocessing/SMAAPass.js'
+
 function Home() {
   const containerRef = useRef(null)
-  let scene, camera, renderer, controls
+  let scene, camera, renderer, controls, composer, outlinePass, renderScene
 
   useEffect(() => {
     while (containerRef.current.firstChild) {
@@ -23,9 +31,21 @@ function Home() {
     camera.position.z = 10
 
     // 创建一个渲染器，将其大小设置为窗口大小，并将其添加到页面的 div 元素中
-    renderer = new THREE.WebGLRenderer({ alpha: true })
-    controls = new OrbitControls(camera, renderer.domElement)
+    renderer = new THREE.WebGLRenderer({ alpha: false, antialias: true })
     renderer.setSize(window.innerWidth, window.innerHeight)
+    renderScene = new RenderPass(scene, camera)
+    composer = new EffectComposer(renderer)
+    const pixelRatio = renderer.getPixelRatio()
+    // width、height是canva画布的宽高度
+    const smaaPass = new SMAAPass(
+      window.innerWidth * pixelRatio,
+      window.innerHeight * pixelRatio
+    )
+    composer.addPass(renderScene)
+    composer.addPass(smaaPass)
+
+    controls = new OrbitControls(camera, renderer.domElement)
+
     containerRef.current.appendChild(renderer.domElement)
 
     // 创建一个立方体
@@ -58,10 +78,23 @@ function Home() {
       // 加载完成后的回调函数
       function (texture) {
         // 创建一个球体
-        const geometry = new THREE.SphereGeometry(5, 40, 40)
-        const material = new THREE.MeshBasicMaterial({ map: texture }) // 将贴图应用到材质上
+        const geometry = new THREE.SphereGeometry(5, 100, 100)
+        const material = new THREE.MeshBasicMaterial({
+          map: texture
+        }) // 将贴图应用到材质上
         const earth = new THREE.Mesh(geometry, material)
-
+        const v2 = new THREE.Vector2(window.innerWidth, window.innerHeight)
+        // const v2 = new THREE.Vector2(800, 600);
+        outlinePass = new OutlinePass(v2, scene, camera, [earth])
+        outlinePass.renderToScreen = true
+        outlinePass.edgeGlow = 3 // 发光强度
+        outlinePass.usePatternTexture = false // 是否使用纹理图案
+        outlinePass.edgeThickness = 10 // 边缘浓度
+        outlinePass.edgeStrength = 10 // 边缘的强度，值越高边框范围越大
+        outlinePass.pulsePeriod = 5 // 闪烁频率，值越大频率越低
+        outlinePass.visibleEdgeColor.set('green') // 呼吸显示的颜色
+        outlinePass.hiddenEdgeColor.set('red') // 不可见边缘的颜色
+        composer.addPass(outlinePass)
         const haloMaterial = new THREE.ShaderMaterial({
           transparent: true,
           blending: THREE.AdditiveBlending,
@@ -83,7 +116,7 @@ function Home() {
         })
         const halo = new THREE.Mesh(geometry.clone(), haloMaterial)
         halo.scale.multiplyScalar(1.1)
-        scene.add(halo)
+        // scene.add(halo)
 
         scene.add(earth)
 
@@ -92,10 +125,11 @@ function Home() {
           requestAnimationFrame(animate)
 
           // 旋转地球
-          earth.rotation.y += 0.005
+          earth.rotation.y += 0.0005
 
           // 渲染场景
-          renderer.render(scene, camera)
+          composer.render()
+          // renderer.render(scene, camera)
           controls.update()
         }
         animate()
