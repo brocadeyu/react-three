@@ -11,6 +11,6 @@ export default class CameraManager {
       0.1,
       1000
     )
-    this.camera.position.set(0, 0, 5)
+    this.camera.position.set(-0.7, 1.8, -4.5)
   }
 }
