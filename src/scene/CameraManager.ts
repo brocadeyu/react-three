@@ -6,11 +6,11 @@ export default class CameraManager {
   camera: THREE.Camera
   constructor() {
     this.camera = new THREE.PerspectiveCamera(
-      75,
+      45,
       window.innerWidth / window.innerHeight,
-      0.1,
+      1,
       1000
     )
-    this.camera.position.set(-0.7, 1.8, -4.5)
+    this.camera.position.set(-13.49, 14.19, -58.28)
   }
 }
