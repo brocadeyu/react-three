@@ -22,6 +22,8 @@ export default class SceneSunset extends SceneBase {
     //   .load(['px.jpg', 'nx.jpg', 'py.jpg', 'ny.jpg', 'pz.jpg', 'nz.jpg'])
   }
   render() {
+    console.log('66')
+
     this.orbitControl.update()
     this.renderer.render(this.scene, this.camera)
   }
