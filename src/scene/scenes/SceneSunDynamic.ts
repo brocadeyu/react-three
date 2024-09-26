@@ -9,7 +9,7 @@ import { Sky } from 'three/examples/jsm/Addons.js'
  */
 export default class SceneSunDynamic extends SceneBase {
   init() {
-    this.acc = 0.001
+    this.acc = 0.01
     this.sunElevation = 2.0
     this.orbitControl = new OrbitControls(this.camera, this.renderer.domElement)
     this.orbitControl.enableDamping = true
@@ -89,11 +89,11 @@ export default class SceneSunDynamic extends SceneBase {
     if (this.sunElevation > 180) {
       this.sunElevation = -10
     }
-    if (this.sunElevation > 30 && this.acc === 0.001) {
+    if (this.sunElevation > 30 && this.acc === 0.01) {
       this.acc = 0.1
     }
     if (this.sunElevation > 150 && this.acc === 0.1) {
-      this.acc = 0.001
+      this.acc = 0.01
     }
   }
   render() {
