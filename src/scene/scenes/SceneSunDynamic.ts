@@ -12,6 +12,7 @@ export default class SceneSunDynamic extends SceneBase {
     this.acc = 0.001
     this.sunElevation = 2.0
     this.orbitControl = new OrbitControls(this.camera, this.renderer.domElement)
+    this.orbitControl.enableDamping = true
     this.camera.position.set(-13.49, 14.19, -58.28)
 
     this.renderer.toneMapping = THREE.ACESFilmicToneMapping
