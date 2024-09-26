@@ -8,10 +8,10 @@ export default class SceneBase {
     this.renderer = renderer
     this.scene = new THREE.Scene()
     this.camera = new THREE.PerspectiveCamera(
-      45,
+      60,
       window.innerWidth / window.innerHeight,
       1,
-      1000
+      2000000
     )
     this.camera.position.z = 5
     this.init()
