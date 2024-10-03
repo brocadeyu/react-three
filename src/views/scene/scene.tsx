@@ -20,9 +20,10 @@ const Scene = () => {
     s.addScene('sunset', sunsetScene)
     s.addScene('sunDynamic', sunDynamicScene)
     s.switchScene('sunDynamic')
-    // setTimeout(() => {
-    //   s.switchScene('sunset')
-    // }, 3000)
+    setTimeout(() => {
+      // s.switchScene('sunset')
+      // console.log('switch')
+    }, 3000)
     setSceneManager(s)
     function animate() {
       s.update()
