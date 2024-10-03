@@ -29,7 +29,7 @@ export default class SceneSunDynamic extends SceneBase {
       rayleigh: 3,
       mieCoefficient: 0.005,
       mieDirectionalG: 0.7,
-      // elevation: 2,
+      elevation: 2,
       azimuth: 180,
       exposure: this.renderer.toneMappingExposure
     }
@@ -46,7 +46,7 @@ export default class SceneSunDynamic extends SceneBase {
       uniforms['mieCoefficient'].value = this.effectController.mieCoefficient
       uniforms['mieDirectionalG'].value = this.effectController.mieDirectionalG
 
-      const phi = THREE.MathUtils.degToRad(90 - this.sunElevation)
+      const phi = THREE.MathUtils.degToRad(90 - this.effectController.elevation)
       const theta = THREE.MathUtils.degToRad(this.effectController.azimuth)
 
       this.sun.setFromSphericalCoords(1, phi, theta)
@@ -68,7 +68,7 @@ export default class SceneSunDynamic extends SceneBase {
     gui
       .add(this.effectController, 'mieDirectionalG', 0.0, 1, 0.001)
       .onChange(guiChanged)
-    // gui.add(effectController, 'elevation', 0, 90, 0.1).onChange(guiChanged)
+    gui.add(this.effectController, 'elevation', 0, 90, 0.1).onChange(guiChanged)
     gui
       .add(this.effectController, 'azimuth', -180, 180, 0.1)
       .onChange(guiChanged)
@@ -80,21 +80,21 @@ export default class SceneSunDynamic extends SceneBase {
   }
   update() {
     // console.log('111')
-    this.sunElevation += this.acc
-    const uniforms = this.sky.material.uniforms
-    const phi = THREE.MathUtils.degToRad(90 - this.sunElevation)
-    const theta = THREE.MathUtils.degToRad(this.effectController.azimuth)
-    this.sun.setFromSphericalCoords(1, phi, theta)
-    uniforms['sunPosition'].value.copy(this.sun)
-    if (this.sunElevation > 180) {
-      this.sunElevation = -10
-    }
-    if (this.sunElevation > 30 && this.acc === 0.01) {
-      this.acc = 0.1
-    }
-    if (this.sunElevation > 150 && this.acc === 0.1) {
-      this.acc = 0.01
-    }
+    // this.sunElevation += this.acc
+    // const uniforms = this.sky.material.uniforms
+    // const phi = THREE.MathUtils.degToRad(90 - this.sunElevation)
+    // const theta = THREE.MathUtils.degToRad(this.effectController.azimuth)
+    // this.sun.setFromSphericalCoords(1, phi, theta)
+    // uniforms['sunPosition'].value.copy(this.sun)
+    // if (this.sunElevation > 180) {
+    //   this.sunElevation = -10
+    // }
+    // if (this.sunElevation > 30 && this.acc === 0.01) {
+    //   this.acc = 0.1
+    // }
+    // if (this.sunElevation > 150 && this.acc === 0.1) {
+    //   this.acc = 0.01
+    // }
   }
   render() {
     this.orbitControl.update()

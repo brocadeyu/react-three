@@ -2,7 +2,7 @@
  * @date 2024-09-25
  */
 import * as THREE from 'three'
-import Checkerboard from './objects/checkerboard'
+import Checkerboard from './objects/CheckerBoard'
 export default class ObjectManager {
   scene: THREE.Scene
   store = new Map()
@@ -18,7 +18,7 @@ export default class ObjectManager {
     this.scene.add(cube)
     this.store.set('cube', cube)
     this.scene.add(new Checkerboard())
-    // const ambientLight = new THREE.AmbientLight(0xffffff) // 环境光
-    // this.scene.add(ambientLight)
+    const ambientLight = new THREE.AmbientLight(0xffffff) // 环境光
+    this.scene.add(ambientLight)
   }
 }
