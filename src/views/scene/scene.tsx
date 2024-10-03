@@ -8,6 +8,7 @@ import SceneSunset from '@/scene/scenes/SceneSunset'
 import React, { useRef, useEffect, useState } from 'react'
 const Scene = () => {
   const containerRef = useRef(null)
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [sceneManager, setSceneManager] = useState(null)
   useEffect(() => {
     while (containerRef.current.firstChild) {
